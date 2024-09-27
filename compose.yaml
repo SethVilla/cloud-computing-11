@@ -8,7 +8,7 @@ services:
     image: sethvilla13/assignment11ui:latest
     container_name: "ui"
     environment:
-      VITE_API_URL: "18.234.127.48"
+      VITE_API_URL: "54.92.184.36"
     depends_on:
       - api
   proxy:

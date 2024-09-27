@@ -13,7 +13,7 @@ function App() {
   }, [])
   return (
     <>
-        <p>{msg? `${msg} with CI/CD pipeline` : "loading..."}</p>
+        <p>{msg? `${msg} with CI/CD pipeline v2` : "loading..."}</p>
     </>
   )
 }
