@@ -10,19 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: AWS SSM Send-Command
-        uses: peterkimzz/aws-ssm-send-command@v1.1.1
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
-          document-name: "AWS-RunShellScript"
-          comment: "Re-running docker-compose commands on EC2"
-          command: |
-            cd /home/ec2-user
-            sudo docker-compose stop
-            sudo docker-compose rm -f
-            sudo docker-compose pull
-            sudo docker-compose up -d
-            sudo docker image prune -af
+
+      - name: Send command to EC2 instance
+        run: |
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --targets "Key=instanceids,Values=${{ secrets.AWS_INSTANCE_ID }}" \
+            --parameters 'commands=["cd /home/ec2-user", "sudo docker-compose stop", "sudo docker-compose rm -f", "sudo docker-compose pull", "sudo docker-compose up -d", "sudo docker image prune -af"]' \
+            --comment "Re-running docker-compose commands on EC2"
