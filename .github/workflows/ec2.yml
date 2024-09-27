@@ -1,10 +1,3 @@
-name: AWS-EC2 Instance CD
-
-on:
-  workflow_run:
-    workflows: ["Node.js CI"]
-    types: [completed]
-
 jobs:
   on-success:
 
@@ -18,13 +11,12 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           # AWS secret access key
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # Where EC2 instance is
+          # AWS region
           aws-region: ${{ secrets.AWS_REGION }}
-          # AWS EC2 Instance id or ids
+          # AWS EC2 instance id or ids
           instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
-          # Command execution location
-          # !!! The line below may vary depending on where your docker-compose file is located.
-          working-directory: /home/ubuntu
+          # Use AWS SSM document to run commands in a shell
+          document-name: "AWS-RunShellScript"
           # Bash commands you want to execute
           command: |
             sudo docker-compose stop
@@ -33,4 +25,4 @@ jobs:
             sudo docker-compose up -d
             sudo docker image prune -af
           # Comment for Send-Command
-          comment: docker-compose.yml file re-pulls newer versions of demo cloud.
+          comment: "Re-pulling newer versions of docker-compose services"
