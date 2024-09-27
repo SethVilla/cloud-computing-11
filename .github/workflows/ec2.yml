@@ -14,22 +14,18 @@ jobs:
       - name: AWS SSM Send-Command
         uses: peterkimzz/aws-ssm-send-command@v1.1.1
         with:
-          # AWS access key id
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          # AWS secret access key
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # AWS region
           aws-region: ${{ secrets.AWS_REGION }}
-          # AWS EC2 instance id or ids
           instance-ids: ${{ secrets.AWS_INSTANCE_ID }}
-          # Use AWS SSM document to run commands in a shell
+          # Using AWS-RunShellScript to handle command execution
           document-name: "AWS-RunShellScript"
-          # Bash commands you want to execute
-          command: |
-            sudo docker-compose stop
-            sudo docker-compose rm -f
-            sudo docker-compose pull
-            sudo docker-compose up -d
-            sudo docker image prune -af
-          # Comment for Send-Command
-          comment: "Re-pulling newer versions of docker-compose services"
+          comment: "Re-running docker-compose commands on EC2"
+          parameters:
+            commands: |
+              cd /home/ec2-user # or the correct working directory for your Linux instance
+              sudo docker-compose stop
+              sudo docker-compose rm -f
+              sudo docker-compose pull
+              sudo docker-compose up -d
+              sudo docker image prune -af
