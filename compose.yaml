@@ -1,0 +1,22 @@
+version: "3"
+services:
+  api:
+    image: sethvilla13/assignment11api:latest
+    container_name: "api"
+
+  ui:
+    image: sethvilla13/assignment11ui:latest
+    container_name: "ui"
+    environment:
+      VITE_API_URL: "18.234.127.48"
+    depends_on:
+      - api
+  proxy:
+    image: sethvilla13/assignment11nginx:latest
+    container_name: "proxy"
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+      - ui
