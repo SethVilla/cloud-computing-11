@@ -3,12 +3,9 @@ services:
   api:
     image: sethvilla13/assignment11api:latest
     container_name: "api"
-
   ui:
     image: sethvilla13/assignment11ui:latest
     container_name: "ui"
-    environment:
-      VITE_API_URL: "54.92.184.36"
     depends_on:
       - api
   proxy:

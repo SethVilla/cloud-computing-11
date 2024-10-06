@@ -7,14 +7,14 @@ function App() {
     useEffect(() => {
       (async() => {
        const {data} = await axios.get("/api/data")
+          const ip = await axios.get('https://api.ipify.org?format=json')
+          console.log(ip)
           console.log(data)
           setMsg(data.message)
       })()
   }, [])
   return (
-    <>
-        <p>{msg? `${msg} with CI/CD pipeline v2` : "loading..."}</p>
-    </>
+        <p>{msg? `${msg} from CI / CD pipeline` : "loading..."}</p>
   )
 }
 
